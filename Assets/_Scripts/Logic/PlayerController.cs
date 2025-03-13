@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
         col = GetComponent<Collider>();
         freeLookCamera = FindAnyObjectByType<CinemachineCamera>();
     }
+
     private void Update()
     {
         transform.rotation = Quaternion.Euler(0, freeLookCamera.transform.rotation.eulerAngles.y, 0);
@@ -71,11 +72,16 @@ public class PlayerController : MonoBehaviour
         col.material = angle > 45 ? smooth : rough;
     }
 
+    public void UpdatePlayerMaxSpeed(float speed)
+    {
+        maxSpeed = speed;
+    }
+
     private bool IsTouchingGround() => Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.1f, groundLayer);
 
     private void MovePlayer(Vector2 dirn)
     {
-        Vector3 direction = new Vector3(dirn.x, 0f, dirn.y) ;
+        Vector3 direction = new Vector3(dirn.x, 0f, dirn.y);
         Quaternion rotation = Quaternion.LookRotation(transform.forward, Vector3.up);
         Vector3 reorientedDirection = rotation * direction;
         if (IsTouchingGround())
@@ -97,7 +103,7 @@ public class PlayerController : MonoBehaviour
             jumpCount = 0;
         }
 
-        if(jumpCount < doubleJump)
+        if (jumpCount < doubleJump)
         {
             // resetting vertical velocity before applying jump force
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
